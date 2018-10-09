@@ -4,13 +4,13 @@ HIGH=0
 LOW=9999
 counter=0
 
-while [ -n $1 -a $counter -lt 5 ] ; do
+while [ -n "$1" ] && [ $counter -lt 5 ] ; do
 
-  if [ $1 -lt $LOW ] ; then
+  if [ "$1" -lt $LOW ] ; then
     LOW=$1
   fi
 
-  if [ $1 -gt $HIGH ] ; then
+  if [ "$1" -gt $HIGH ] ; then
     HIGH=$1
   fi
 

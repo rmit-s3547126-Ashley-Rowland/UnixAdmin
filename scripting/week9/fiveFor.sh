@@ -4,17 +4,17 @@ high=0
 low=9999
 counter=0
 
-for i in $@ ; do
+for i in "$@" ; do
 
-  if [ -z $i ] ; then
+  if [ -z "$i" ] ; then
     break
   fi
 
-  if [ $i -lt $low ] ; then
+  if [ "$i" -lt $low ] ; then
     low=$i
   fi
 
-  if [ $i -gt $high ] ; then
+  if [ "$i" -gt $high ] ; then
     high=$i
   fi
 
