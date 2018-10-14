@@ -56,11 +56,12 @@ function led_control_menu() {
 		4)
 			associate_process "$1" ;;
 		5)
-			stop_process_association ;;
+			stop_process_association "$2" ;;
 		6)
 			led_menu;;
 		*)
-			printf "Error: please input a number between 1 and 6\\n";;
+			printf "Error: please input a number between 1 and 6\\n"
+			led_control_menu "$1" "$2" ;;
 	esac
 }
 
@@ -128,17 +129,20 @@ function associate_process() {
 		printf "I have detected a name conflict. Do you want to monitor (PID in brackets):\\n"
 		
 		counter=1
-		for i in "${processes[@]}"; do
-			IFS=" " read -ra split <<< "$processes" 
-			printf "%d) %s(%s)\\n" $counter "${split[1]}" "${split[0]}"
+		for i in "${processes[@]}"; do	
+			split=$(awk -F ' ' <<< "${processes[i]}")
+			printf "%d) %s(%s)\\n" $counter "${split[i+1]}" "${split[i]}"
 			((counter++))
 		done
 		printf "%d) Cancel Request\\n" "$counter"
 
 		read -r input
 
-	elif ((${#split_processes[@]} == 1)) ; then
+	elif ((${#processes[@]} == 1)) ; then
 		background_resource_checker &
+		
+		IFS=" " read -ra split <<< "${processes[0]}" 
+		led_control_menu "$1" "${split[0]}"
 	else
 		printf "Error: no process with that name (or partial name) were found\\n"
 		led_control_menu "$1"
@@ -149,7 +153,13 @@ function associate_process() {
 function background_resource_checker() {
 
 	true
+	
+}
 
+#function to kill process that is checking for performance
+function stop_process_association() {
+
+	true
 }
 
 #run led selection menu (start of application)

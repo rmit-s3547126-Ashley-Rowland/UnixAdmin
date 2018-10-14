@@ -1,0 +1,9 @@
+Running of program
+	The program can be run using the A2-s3547126.sh command. This will run the initial function led_menu (the main menu function)
+
+Known issues:
+	- While attempting part 6, the process of splitting the processes found using pgrep is for some reason being called within the script itself (whereas I've 
+	attempted to store them as an array). Thus the association cannot be built (bash reports an error). I have attempted to use IFS, awk and cut, however each comes up with 
+	the same response.
+	- since part 6 wasn't completed fully, I haven't implemented the kill command (part 7). I believe it's meant to be completed by passing back a reference to the 
+	background process in line 142 (when returning to the led_control_menu) or later (assuming only a single process by that name was found)
