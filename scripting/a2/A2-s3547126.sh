@@ -34,7 +34,7 @@ function led_control_menu() {
 
     printf "[%s]\\n" "$1"
     printf "===========\\n"
-    printf "What would you like to do with this led?\\n"
+ 	printf "What would you like to do with this led?\\n"
     printf "1) turn on\\n"
     printf "2) turn off\\n"
     printf "3) associate with system event\\n"
@@ -54,7 +54,7 @@ function led_control_menu() {
 		3)
 			associate_system_event "$1" ;;
 		4)
-			associate_process ;;
+			associate_process "$1" ;;
 		5)
 			stop_process_association ;;
 		6)
@@ -110,12 +110,47 @@ function associate_system_event() {
 	fi
 }
 
+#function that creates the association of process performance to the Led
+function associate_process() {
 
+	printf "Associate LED with the performance of a process\\n"
+	printf -- "-----------------------------------------------\\n"
+	printf "Please enter the name of the program to monitor (partial names are ok):\\n"
 
+	read -r input
 
-#run led selection menu
+	mapfile -t processes < <( pgrep -l "$input" )
+
+	if ((${#processes[@]} > 1)) ; then
+		
+		printf "Name conflict!\\n"
+		printf -- "--------------\\n"
+		printf "I have detected a name conflict. Do you want to monitor (PID in brackets):\\n"
+		
+		counter=1
+		for i in "${processes[@]}"; do
+			IFS=" " read -ra split <<< "$processes" 
+			printf "%d) %s(%s)\\n" $counter "${split[1]}" "${split[0]}"
+			((counter++))
+		done
+		printf "%d) Cancel Request\\n" "$counter"
+
+		read -r input
+
+	elif ((${#split_processes[@]} == 1)) ; then
+		background_resource_checker &
+	else
+		printf "Error: no process with that name (or partial name) were found\\n"
+		led_control_menu "$1"
+	fi
+}
+
+#function to be run in the background that periodically checks process performance
+function background_resource_checker() {
+
+	true
+
+}
+
+#run led selection menu (start of application)
 led_menu
-
-
-#debugging
-#associate_system_event_menu led0
